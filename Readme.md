@@ -19,8 +19,8 @@ El proyecto estará basado en una Arquitectura SOA (Service Oriented Architectur
 
 | No. | Descripción                                           | Potenciador | Estatus       |
 |----:|-------------------------------------------------------|-------------|---------------|
-| 1 | Configuarion inicial del proyecto(NodeJs) | ❌ | ✅ |
-| 2 | Routing y Requests (Peticiones) | ❌ | ❌ |
+| 1 | Configuarion inicial del proyecto(NodeJs) | ✅ | ✅ |
+| 2 | Routing y Requests (Peticiones) | ✅ | ✅ |
 | 3 | Layouts, Template Engines y Tailwind CSS (Frontend) | ❌ | ❌ |
 | 4 | Creacion de paginas de Login y Creacion de Usuarios | ❌ | ❌ |
 | 5 | ORM's y Bases de Datos | ❌ | ❌ |
