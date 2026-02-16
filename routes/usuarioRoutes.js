@@ -89,7 +89,7 @@ router.patch("/updatePassword/:nuevoPassword", (req, res) => {
 
 // Ejemplo de un ENDPOINT DELETE - Simular la eliminación de un usuario creado
 router.delete("/deleteProperty/:id", (req, res) => {
-    console.log("Procesando una petición del Tipo DELETE.")
+    console.log("Procesando una petición del Tipo DELETE")
     const { id } = req.params;
 
     res.json({
