@@ -1,13 +1,12 @@
 import express from 'express'
+import {formularioLogin, formularioRegistro} from '../controllers/usuarioController.js'
 
 const router = express.Router();
 
 // Definir los ENDPOINTS
 // GET
-router.get("/login", (req, res)=>{
-    
-    res.render("auth/login")
-})
+router.get("/login", formularioLogin)
+router.get("/registro", formularioRegistro)
 
 
 //POST
@@ -15,8 +14,8 @@ router.post("/createUser", (req, res) =>
     {
         console.log("Se esta procesando una petición del tipo POST")
         const nuevoUsuario = {
-            nombre:"Oliver Sanchez Arrioja",
-            correo:"osanchezarrioja@gmail.com"
+            nombre:"Marco A. Ramírez",
+            correo:"marco@gmail.com"
         }
 
         res.json({
@@ -53,8 +52,8 @@ router.patch("/actualizarPassword/:nuevoPassword", (req, res)=>
 {
     console.log("Se esta procesando una petición del tipo PATCH");
     const usuario = {
-        nombre: "Oliver",
-        correo: "oliver@gmail.com", 
+        nombre: "Damián Romero",
+        correo: "d.romero@gmail.com", 
         password: "123456789"        
     }
 
