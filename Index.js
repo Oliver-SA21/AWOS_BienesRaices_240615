@@ -1,14 +1,21 @@
-import express from "express";
-import usuarioRoutes from "./routes/usuarioRoutes.js";
+//console.log("Hola desde JS");
+import express from 'express'
+import usuarioRoutes from './routes/usuarioRoutes.js'
 
-//Instanciamos el Servidor que alojara la WebApp
+// Crea una instancia del contenedor web 
 const app = express();
+const PORT = process.env.PORT ?? 4000;
 
-//Importamos sus rutas (ruteo)
-app.get("/", usuarioRoutes);
-app.use("/", usuarioRoutes);
+// Habilitar el Template Engine (PUG)
+app.set("view engine", "pug");
+app.set("views", "./views")
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`El Servidor está iniciado en el puerto ${PORT}`)
-})
+// Definimos la carpeta de los recursos estáticos
+app.use(express.static('public'))
+
+
+app.use("/auth", usuarioRoutes)
+
+app.listen(PORT, ()=> {
+    console.log(`El servidor esta iniciado en el puerto ${PORT}`)
+}) 
