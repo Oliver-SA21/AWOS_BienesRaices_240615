@@ -4,7 +4,13 @@ const formularioLogin = (req, res) => {
 
 const formularioRegistro = (req,res) =>
 {
-    res.render("auth/registro", {pagina: "Registate con nosotros :)"});
+    res.render("auth/registro", {pagina: "Registrate con nosotros :)"});
 }
 
-export { formularioLogin, formularioRegistro}
+const formularioRecuperacion = (req,res) =>
+{
+    res.render("auth/recuperarPassword", {pagina: "Te ayudamos a restaurar tu contraseña"});
+}
+
+
+export { formularioLogin, formularioRegistro, formularioRecuperacion}

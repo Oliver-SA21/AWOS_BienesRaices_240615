@@ -1,5 +1,5 @@
 import express from 'express'
-import {formularioLogin, formularioRegistro} from '../controllers/usuarioController.js'
+import {formularioLogin, formularioRecuperacion, formularioRegistro} from '../controllers/usuarioController.js'
 
 const router = express.Router();
 
@@ -7,6 +7,7 @@ const router = express.Router();
 // GET
 router.get("/login", formularioLogin)
 router.get("/registro", formularioRegistro)
+router.get("/recuperarPassword", formularioRecuperacion)
 
 
 //POST
