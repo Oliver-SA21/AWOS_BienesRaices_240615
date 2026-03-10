@@ -14,6 +14,8 @@ app.set("views", "./views")
 // Definimos la carpeta de los recursos estáticos
 app.use(express.static('public'))
 
+// Habilitar lectura de datos a través de las peticiones (REQUEST)
+app.use(express.urlencoded({extended: true}))
 
 app.use("/auth", usuarioRoutes)
 await connectDB();
