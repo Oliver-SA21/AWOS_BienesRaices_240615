@@ -27,13 +27,17 @@
     "watch:css": "npx @tailwindcss/cli -i ./src/css/styles.css -o ./public/css/styles.css --watch"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
+    "mysql2": "^3.19.1",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
-    "express": "npm:Express@^3.0.1",
-    "Express": "^3.0.1",
-    "nodemailer": "^8.0.1",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
-    "pug": "^3.0.3",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "dotenv": "^17.3.1"
   }
 }
