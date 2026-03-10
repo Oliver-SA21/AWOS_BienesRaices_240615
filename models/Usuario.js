@@ -5,10 +5,19 @@ import crypto from 'crypto';
 
 const Usuario = db.define('Usuario', {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false
+    },
+    name: {
+      type:DataTypes.STRING(100),
+      allowNull:false,
+      validate: 
+        { 
+          notEmpty: {
+          msg: 'El nombre no pueder ser vacío' }
+        }
     },
     email: {
       type: DataTypes.STRING(100),
@@ -16,7 +25,7 @@ const Usuario = db.define('Usuario', {
       unique: {
         msg: 'El email ya está registrado'
       },
-      validate: {
+       validate: {
         isEmail: {
           msg: 'Debe proporcionar un email válido'
         },
@@ -33,43 +42,43 @@ const Usuario = db.define('Usuario', {
           msg: 'La contraseña no puede estar vacía'
         },
         len: {
-          args: [6, 100],
+          args: [8, 100],
           msg: 'La contraseña debe tener al menos 6 caracteres'
         }
       }
     },
-    confirmado: {
+    confirmed: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      field: 'confirmado'
+      allowNull: false,
+      defaultValue: false, 
     },
-    tokenRecuperacion: {
+    tokenRecovery: {
       type: DataTypes.STRING(255),
       allowNull: true,
-      field: 'token_recuperacion'
+      field: 'token_recovery'
     },
-    tokenExpiracion: {
+    tokenExpiration: {
       type: DataTypes.DATE,
       allowNull: true,
-      field: 'token_expiracion'
+      field: 'token_expiration'
     },
     regStatus: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
       field: 'reg_status'
     },
-    ultimoAcceso: {
+    lastLogin: {
       type: DataTypes.DATE,
       allowNull: true,
-      field: 'ultimo_acceso'
+      field: 'last_login'
     }
   }, {
-    tableName: 'tb_usuarios',
+    tableName: 'tb_users',
     timestamps: true,
     underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    
+
     hooks: {
       // Hash de contraseña antes de crear
       beforeCreate: async (usuario) => {
@@ -79,7 +88,7 @@ const Usuario = db.define('Usuario', {
         }
       },
       
-      // Hash de contraseña antes de actualizar (si cambió)
+      // Hash de contraseña antes dez actualizar (si cambió)
       beforeUpdate: async (usuario) => {
         if (usuario.changed('password')) {
           const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_ROUNDS) || 10);
@@ -89,6 +98,7 @@ const Usuario = db.define('Usuario', {
     }
   });
 
+  /*
   // Métodos de instancia
   Usuario.prototype.validarPassword = async function(password) {
     return await bcrypt.compare(password, this.password);
@@ -131,6 +141,6 @@ const Usuario = db.define('Usuario', {
         regStatus: true
       }
     });
-  };
+  };*/
 
   export default Usuario;
