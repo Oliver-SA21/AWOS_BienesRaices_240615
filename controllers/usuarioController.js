@@ -13,8 +13,8 @@ const formularioRegistro = (req,res) =>
 const registrarUsuario = async(req,res) =>
 {
     console.log("Intentando registrar a un Usuario Nuevo con los datos del formulario:");
-    
-    const {name, email, password} = req.body 
+    console.log(req.body);
+    const {nombreUsuario:name, emailUsuario: email, passwordUsuario:password} = req.body 
 
 
     // Validación de los datos del formulario previo a registro en la BD
@@ -42,7 +42,7 @@ const registrarUsuario = async(req,res) =>
 
     // Validar si hay errores en la recepción de datos , si no mandar a bd
 
-    else if(resultadoValidacion.isEmpty())
+    if(resultadoValidacion.isEmpty())
     {
         const data =
         {
@@ -52,7 +52,10 @@ const registrarUsuario = async(req,res) =>
             token: generarToken()
         }
         const usuario = await Usuario.create(data);
-        res.json(usuario)
+        res.render("templates/mensaje",{
+            title: "¡Bienvenid@ a BienesRaíces!",
+            msg: `La cuenta asociada al correo: ${email}, se ha creado exitosamente, te pedimos confirmar tu a través del correo electrónico que te hemos enviado. `
+        })
 
     }
     else 
