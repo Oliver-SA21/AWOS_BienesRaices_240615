@@ -79,10 +79,38 @@ const registrarUsuario = async(req,res) =>
             
 }
 
+const paginaConfirmacion = async(req, res) =>
+{
+     const {token:tokenCuenta} = req.params
+     console.log("Confirmando la cuenta asociada al token: ", tokenCuenta);
+
+     //Confirmar si el toke existe
+     const usuarioToken = await(Usuario.findOne({where:{token:tokenCuenta }}))
+     console.log(usuarioToken);
+
+     if(!usuarioToken)
+     {
+        res.render("templates/mensaje",{
+            title: "Error al confirmar la cuenta",
+            msg: `El código de verificación (no es válido), por favor intentalo de nuevo.`});
+     }
+
+     // Actualizar los datos del usuario.
+     usuarioToken.token=null;
+     usuarioToken.confirmed=true;
+     usuarioToken.save();
+    
+     res.render("templates/mensaje",{
+            title: "Confirmación exitosa",
+            msg: `La cuenta de:  ${usuarioToken.name}, asociada al correo electrónico: ${usuarioToken.email} se ha confirmado, ahora ya puedes ingresar a la plataforma.`});
+
+
+}
+
 const formularioRecuperacion = (req,res) =>
 {
     res.render("auth/recuperarPassword", {pagina: "Te ayudamos a restaurar tu contraseña"});
 }
 
 
-export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion}
+export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion}
