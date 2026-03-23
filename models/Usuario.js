@@ -98,12 +98,13 @@ const Usuario = db.define('Usuario', {
     }
   });
 
-  /*
-  // Métodos de instancia
-  Usuario.prototype.validarPassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+
+ // Métodos de instancia
+  Usuario.prototype.validarPassword =  function(password) {
+    return  bcrypt.compareSync(password, this.password);
   };
 
+  /*
   Usuario.prototype.generarTokenRecuperacion = function() {
     // Generar token aleatorio
     const token = crypto.randomBytes(20).toString('hex');

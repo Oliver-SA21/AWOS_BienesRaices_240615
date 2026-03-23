@@ -222,6 +222,71 @@ const actualizarPassword = async(req, res) => {
                 errores: resultadoValidacion.array()});
         }
 
+        
+    /*
+    Actualizar la contraseña en la bd
+    */
+
     }
 
-export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword, actualizarPassword}
+const autenticarUsuario = async(req,res) => {
+        const {emailUsuario: email, passwordUsuario: password} =  req.body
+        console.log(`Un usuario: ${email} con password: ${password}  quiere logearse al sistema`);
+        
+        // Validaciones de front  (campos no vacios)
+        await check('emailUsuario').notEmpty().withMessage("El correo electrónico no puede ser vacío").isEmail().withMessage("El correo electrónico no tiene un formato adecuado").run(req)
+        await check('passwordUsuario').notEmpty().withMessage("La contraseña parece estar vacía").isLength({ min: 8 , max:30}).withMessage("La longitud de la contraseña debe ser entre 8 y 30 caractéres").run(req);
+
+        let resultadoValidacion = validationResult(req);
+
+        if(!resultadoValidacion.isEmpty())
+        {
+            res.render("auth/login", { 
+                pagina: "Error al intentar ingresar a la plataforma", 
+                errores: resultadoValidacion.array(), 
+                usuario: { emailUsuario: email  }});
+
+        }
+        
+        //  Validación de backend  (buscar al usuario en bd)
+        const usuario = await Usuario.findOne({where:{email}});
+
+        if(!usuario)
+        {
+            res.render("auth/login", { 
+                pagina: "Error al intentar ingresar a la plataforma", 
+                errores: [{"msg": `No existe un usuario asociado a : ${email}`}]
+            });
+        }
+
+        // Validación de backend (si la cuenta esta confirmada)
+        else if(!usuario.confirmed)
+        {
+            res.render("auth/login", { 
+                pagina: "Error al intentar ingresar a la plataforma", 
+                errores: [{"msg": `La cuenta asociada a  : ${email} no ha sido confirmada`}]
+            });
+        }
+
+        console.log("Validando Contraseñas")
+        console.log("->",usuario.validarPassword(password),"<-");
+
+        if(!usuario.validarPassword(password))
+        {
+            res.render("auth/login", { 
+                pagina: "Error al intentar ingresar a la plataforma", 
+                errores: [{"msg": `Contraseña incorrecta, por favor intentalo de nuevo`}]
+            });
+        }
+
+
+
+        //   Validación de backend (comparar contraseñas con correo)
+
+
+        //   Renderizar la página de Bienvenida
+
+
+    }
+
+export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword, actualizarPassword, autenticarUsuario}
