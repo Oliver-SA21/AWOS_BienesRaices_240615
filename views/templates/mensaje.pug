@@ -9,3 +9,7 @@ block contenido
     .mt-8.mx-auto.max-w-xl
             .bg-white.py-8.px-4.shadow-2xl.rounded-2xl
                 p.text-xl.text-bold.text-center.my-10= msg
+
+                div.flex.justify-center.py-6
+                    if buttonVisibility
+                        a(class="w-3/4 bg-gray-300 text-orange-400 hover:bg-orange-400 hover:text-white font-bold py-3 cursor-pointer rounded-4xl shadow-lg uppercase transition-all duration-200 text-center block" href=buttonURL)= buttonText
