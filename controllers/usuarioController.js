@@ -84,7 +84,7 @@ const paginaConfirmacion = async(req, res) =>
      const {token:tokenCuenta} = req.params
      console.log("Confirmando la cuenta asociada al token: ", tokenCuenta);
 
-     //Confirmar si el toke existe
+     //Confirmar si el token existe en la BD
      const usuarioToken = await(Usuario.findOne({where:{token:tokenCuenta }}))
      console.log(usuarioToken);
 
