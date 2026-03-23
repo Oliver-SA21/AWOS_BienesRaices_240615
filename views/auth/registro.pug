@@ -14,6 +14,7 @@ block contenido
         .mt-8.mx-auto.max-w-xl
             .bg-white.py-8.px-4.shadow-2xl.rounded-2xl
                 form.space-y-5(method="POST" action="/auth/registro" noValidate)
+                        input(type="hidden" name="_csrf" value=csrfToken)
                         div.px-5 
                             label.block.text-sm.uppercase.text-gray-500.mb-2.font-bold(for="nombreUsuario") nombre completo:
                             input#nombreUsuario(type="text" class="hover:inset-shadow-sm focus:inset-shadow-xl focus:inset-shadow-orange-300 focus:outline-none" placeholder="p.e.: Marco Antonio Ramírez Hernández" name="nombreUsuario" value= usuario ? usuario.nombreUsuario: '').w-full.hover.border.border-gray-300.px-3.py-2.rounded-xl.placeholder-gray-400
