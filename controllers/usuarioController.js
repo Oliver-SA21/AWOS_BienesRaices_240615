@@ -1,6 +1,6 @@
 import {check, validationResult } from 'express-validator'
 import Usuario from '../models/Usuario.js'
-import {generarToken} from '../lib/tokens.js'
+import {generarToken, generarJWT} from '../lib/tokens.js'
 import {emailRegistro, emailResetearPassword} from '../lib/emails.js'
 
 const formularioLogin = (req, res) => {
@@ -268,17 +268,28 @@ const autenticarUsuario = async(req,res) => {
             });
         }
 
-        console.log("Validando Contraseñas")
-        console.log("->",usuario.validarPassword(password),"<-");
-
-        if(!usuario.validarPassword(password))
+        else
         {
-            res.render("auth/login", { 
+            console.log("Validando Contraseñas")
+            console.log("->",usuario.validarPassword(password),"<-");
+    
+            if(!usuario.validarPassword(password))
+            {
+                res.render("auth/login", { 
                 pagina: "Error al intentar ingresar a la plataforma", 
                 errores: [{"msg": `Contraseña incorrecta, por favor intentalo de nuevo`}]
-            });
-        }
+                });  //examen bloqueo al 5to intento
+            }
 
+            else
+            {   
+                const token = generarJWT(usuario.id);                
+                console.log(token);
+                res.render("main/mis-propiedades", { 
+                pagina: "Menu Principal del Usuario", 
+                });  
+            }
+        }
 
 
         //   Validación de backend (comparar contraseñas con correo)

@@ -104,6 +104,7 @@ const Usuario = db.define('Usuario', {
     return  bcrypt.compareSync(password, this.password);
   };
 
+
   /*
   Usuario.prototype.generarTokenRecuperacion = function() {
     // Generar token aleatorio
