@@ -1,6 +1,6 @@
 import express from 'express'
 import {formularioLogin, formularioRecuperacion, formularioRegistro, registrarUsuario,
-    paginaConfirmacion
+    paginaConfirmacion,resetearPassword, formularioActualizacionPassword
 } from '../controllers/usuarioController.js'
 
 const router = express.Router();
@@ -11,10 +11,12 @@ router.get("/login", formularioLogin)
 router.get("/registro", formularioRegistro)
 router.get("/recuperarPassword", formularioRecuperacion)
 router.get("/confirma/:token", paginaConfirmacion)
-
+router.get("/actualizarPassword/:token", formularioActualizacionPassword)
 
 //POST
 router.post("/registro", registrarUsuario)
+router.post("/recuperarPassword", resetearPassword)
+
 router.post("/createUser", (req, res) =>
     {
         console.log("Se esta procesando una petición del tipo POST")

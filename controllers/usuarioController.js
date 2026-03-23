@@ -1,7 +1,7 @@
 import {check, validationResult } from 'express-validator'
 import Usuario from '../models/Usuario.js'
 import {generarToken} from '../lib/tokens.js'
-import {emailRegistro} from '../lib/emails.js'
+import {emailRegistro, emailResetearPassword} from '../lib/emails.js'
 
 const formularioLogin = (req, res) => {
      res.render("auth/login", {pagina: "Inicia sesión"});
@@ -75,9 +75,9 @@ const registrarUsuario = async(req,res) =>
             usuario: { nombreUsuario: name,
                 emailUsuario: email
             }});
+    
+            
 }
-
-
 
 const paginaConfirmacion = async(req, res) =>
 {
@@ -92,9 +92,13 @@ const paginaConfirmacion = async(req, res) =>
      {
         res.render("templates/mensaje",{
             title: "Error al confirmar la cuenta",
-            msg: `El código de verificación (no es válido), por favor intentalo de nuevo.`});
+            msg: `El código de verificación (no es válido), por favor intentalo de nuevo.`,
+            buttonVisibility: false,
+            buttonText: null,
+            buttonURL: null});
      }
 
+     else {
      // Actualizar los datos del usuario.
      usuarioToken.token=null;
      usuarioToken.confirmed=true;
@@ -102,8 +106,10 @@ const paginaConfirmacion = async(req, res) =>
     
      res.render("templates/mensaje",{
             title: "Confirmación exitosa",
-            msg: `La cuenta de:  ${usuarioToken.name}, asociada al correo electrónico: ${usuarioToken.email} se ha confirmado, ahora ya puedes ingresar a la plataforma.`});
-
+            msg: `La cuenta de:  ${usuarioToken.name}, asociada al correo electrónico: ${usuarioToken.email} se ha confirmado, ahora ya puedes ingresar a la plataforma.`,buttonVisibility: true,
+            buttonText: "Ingresar a BienesRaices-MATRICULA!",
+            buttonURL: "/auth/login"});
+    }
 
 }
 
@@ -112,5 +118,67 @@ const formularioRecuperacion = (req,res) =>
     res.render("auth/recuperarPassword", {pagina: "Te ayudamos a restaurar tu contraseña"});
 }
 
+const formularioActualizacionPassword = (req,res) =>
+{
+    res.render("auth/resetearPassword", {pagina: "Ingresa tu nueva contraseña"});
+}
 
-export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion}
+
+
+const resetearPassword = async(req, res) =>
+{
+    const {emailUsuario:usuarioSolicitante} = req.body
+    console.log(`El usuario con correo: ${usuarioSolicitante} esta solicitando un reseteo de contraseña.`)
+
+    // Validación 1
+    const usuario = await Usuario.findOne({where: { email: usuarioSolicitante}});
+    // SELECT email FROM tb_users WHERE email =  usuarioSolicitante;   // SQL Injection
+    if(!usuario)
+    {
+            res.render("templates/mensaje",{
+            title: "Error, buscando la cuenta",
+            msg: `No se ha encontrado ninguna cuenta asociada al correo: ${usuarioSolicitante}`,
+            buttonVisibility: true,
+            buttonText: "Intentalo de nuevo",
+            buttonURL: "/auth/recuperarPassword"
+            });
+    
+    }
+    else
+    {
+        //Validacion 2
+        if (!usuario.confirmed)         
+        {
+            res.render("templates/mensaje",{
+            title: "Error, la cuenta no esta confirmada",
+            msg: `La  cuenta asociada al correo: ${usuarioSolicitante}, no ha sido validad a través de la liga segura enviada al correo electrónico.`,
+            buttonVisibility: true,
+            buttonText: "Intentalo de nuevo",
+            buttonURL: "/auth/recuperarPassword"
+            });
+        }
+
+        else
+        {
+            // Actualizar el token
+            usuario.token = generarToken();
+            usuario.save();
+            // Enviar el token por correo   
+            emailResetearPassword({
+                nombre: usuario.name,
+                email: usuario.email,
+                token: usuario.token
+            })
+
+            // Responder con una vista de correo enviada
+            res.render("templates/mensaje",{
+                title: "Correo para la Restauración de Contraseñas",
+            msg: `Un paso más, te hemos enviado un correo electrónico con la liga segura para la restauración de tu contraseña.`,
+            buttonVisibility: false});
+        }
+   
+             
+        }
+}
+
+export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword}
