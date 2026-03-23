@@ -118,12 +118,19 @@ const formularioRecuperacion = (req,res) =>
     res.render("auth/recuperarPassword", {pagina: "Te ayudamos a restaurar tu contraseña"});
 }
 
-const formularioActualizacionPassword = (req,res) =>
+const formularioActualizacionPassword = async(req,res) =>
 {
-    res.render("auth/resetearPassword", {pagina: "Ingresa tu nueva contraseña"});
+    console.log(req.body)
+    const {token} = req.params; 
+    console.log(`El usuario con token :${token} esta intentando actualizar su contraseña`);
+
+    const usuarioSolicitante =  await Usuario.findOne({where: {token}});
+    console.log(`El usuario dueño del  token es :${usuarioSolicitante.email}`);
+   
+    res.render("auth/resetearPassword", {pagina: "Ingresa tu nueva contraseña", 
+        email: usuarioSolicitante.email
+    });
 }
-
-
 
 const resetearPassword = async(req, res) =>
 {
@@ -132,20 +139,20 @@ const resetearPassword = async(req, res) =>
 
     const {emailUsuario: email} = req.body 
 
-     // Validaciones del Frontend 
-     await check('emailUsuario').notEmpty().withMessage("El correo electrónico no puede ser vacío").isEmail().withMessage("El correo electrónico no tiene un formato adecuado").run(req)
-    
-     let resultadoValidacion = validationResult(req);
+        // Validaciones del Frontend 
+        await check('emailUsuario').notEmpty().withMessage("El correo electrónico no puede ser vacío").isEmail().withMessage("El correo electrónico no tiene un formato adecuado").run(req)
+        
+        let resultadoValidacion = validationResult(req);
 
-     if(!resultadoValidacion.isEmpty())
-     {
-         res.render("auth/recuperarPassword", { 
-            pagina: "Error, correo inválido", 
-            errores: resultadoValidacion.array(), 
-            usuario: { emailUsuario: email  }});
-     }
+        if(!resultadoValidacion.isEmpty())
+        {
+            res.render("auth/recuperarPassword", { 
+                pagina: "Error, correo inválido", 
+                errores: resultadoValidacion.array(), 
+                usuario: { emailUsuario: email  }});
+        }
 
-    // Validación 1
+    // Validación Backend - Existe el usuario?
     const usuario = await Usuario.findOne({where: { email: usuarioSolicitante}});
     // SELECT email FROM tb_users WHERE email =  usuarioSolicitante;   // SQL Injection
     if(!usuario)
@@ -161,7 +168,7 @@ const resetearPassword = async(req, res) =>
     }
     else
     {
-        //Validacion 2
+        //Validacion Backend - El usuario existente ya valido su cuenta?
         if (!usuario.confirmed)         
         {
             res.render("templates/mensaje",{
@@ -196,4 +203,25 @@ const resetearPassword = async(req, res) =>
         }
 }
 
-export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword}
+
+const actualizarPassword = async(req, res) => {
+    const {emailSolicitante: email, passwordUsuario:password } = req.body
+    console.log(`Actualizando  la contraseña del usuario con email: ${email} a nivel backend - base de datos.`)
+
+    //Validaciones de Frontend
+     await check('passwordUsuario').notEmpty().withMessage("La contraseña parece estar vacía").isLength({ min: 8 , max:30}).withMessage("La longitud de la contraseña debe ser entre 8 y 30 caractéres").run(req);
+    await check('confirmacionUsuario').equals(password).withMessage("Ambas contraseñas deben ser iguales").run(req);
+
+    // aplicamos la reglas definidas
+    let resultadoValidacion = validationResult(req);
+
+    if(!resultadoValidacion.isEmpty())
+        {
+            res.render("auth/resetearPassword", { 
+                pagina: "Error al intentar actualizar la contraseña", 
+                errores: resultadoValidacion.array()});
+        }
+
+    }
+
+export { formularioLogin, formularioRegistro, registrarUsuario, formularioRecuperacion, paginaConfirmacion, resetearPassword, formularioActualizacionPassword, actualizarPassword}
