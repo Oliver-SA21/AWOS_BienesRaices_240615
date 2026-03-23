@@ -75,9 +75,9 @@ const registrarUsuario = async(req,res) =>
             usuario: { nombreUsuario: name,
                 emailUsuario: email
             }});
-    
-            
 }
+
+
 
 const paginaConfirmacion = async(req, res) =>
 {
