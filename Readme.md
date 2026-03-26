@@ -43,6 +43,30 @@ El proyecto estará basado en una Arquitectura SOA (Service Oriented Architectur
 | 22 | Barras de Navegación y Cierre de Sesión | ❌ | ❌ |
 | 22 | Publicacion del API y el Frontend | ❌ | ❌ |
 
+---
+
+## Pruebas
+
+### Pantalla Login
+
+Corresponde a la vista principal del login, donde el usuario puede realizar distintas actividades.
+
+<img src= "public/img/login.jpeg" width="700">
+
+### Pantalla Recuperar Contraseña
+
+Pantalla con la finalidad de cambiar contraseña del usuario en caso de cualquier olvido
+
+<img src= "public/img/recuperarPassword.jpeg" width="700">
+
+### Pantalla Registrar Nuevo Usuario
+
+Pantalla para registrar nuevo usaurio en la BD
+
+<img src= "public/img/registro.jpeg" width="700">
+
+---
+
 ## Resultados Optenidos
 
 ```
