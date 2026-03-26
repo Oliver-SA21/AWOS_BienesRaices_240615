@@ -67,12 +67,6 @@ Pantalla para registrar nuevo usaurio en la BD
 
 ---
 
-## Resultados Optenidos
-
-```
-Posteriormente se ubicaran imagenes del proyecto
-```
-
 ## Creado por
 
 Oliver Sanchez Arrioja - 240615
